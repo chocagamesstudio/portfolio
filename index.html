@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Choca Games Studio</title>
+  <meta name="description" content="Choca Games Studio: um grupo de amigos do Acre que quer contar histórias que cativem através de jogos." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    body { background-color: #09090b; }
+    .animate-spin-slow { animation: spin 4s linear infinite; }
+    .animate-loading-bar { animation: loading 2s ease-in-out forwards; }
+    .animate-float { animation: float infinite linear; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes loading { 0% { width: 0%; } 100% { width: 100%; } }
+    @keyframes float {
+      0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.2; }
+      90% { opacity: 0.2; }
+      100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+    }
+    .bg-acre-flag { background: linear-gradient(135deg, #FDE021 50%, #00923F 50%); }
+    .reveal { opacity: 0; transform: translateY(3rem); transition: all 1000ms ease-out; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .conic-spin { animation: spin 4s linear infinite; background: conic-gradient(from 0deg, #FDE021, #00923F, #EF2836, #FDE021); }
+    [data-lucide] { display: inline-block; }
+  </style>
+</head>
+<body class="min-h-screen font-sans text-zinc-300 selection:bg-red-600/30 selection:text-white overflow-x-hidden">
+
+  <!-- Loading -->
+  <div id="loading" class="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-zinc-950 transition-opacity duration-500">
+    <i data-lucide="star" class="w-16 h-16 text-red-600 animate-spin-slow mb-6"></i>
+    <div class="text-yellow-400 font-bold text-2xl tracking-widest animate-pulse">CHOCA GAMES</div>
+    <div class="mt-4 w-48 h-1 bg-zinc-800 rounded-full overflow-hidden">
+      <div class="h-full bg-green-600 animate-loading-bar"></div>
+    </div>
+  </div>
+
+  <!-- Particles -->
+  <div id="particles" class="fixed inset-0 overflow-hidden pointer-events-none z-0"></div>
+
+  <!-- Navbar -->
+  <nav class="fixed w-full z-50 bg-zinc-950/80 backdrop-blur-md border-b border-zinc-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-20">
+        <div class="flex items-center gap-3">
+          <div class="relative flex items-center justify-center w-10 h-10">
+            <i data-lucide="star" class="absolute w-8 h-8 text-red-600 fill-red-600 z-10"></i>
+          </div>
+          <span class="text-white font-black text-xl tracking-widest uppercase">CHOCA <span class="text-yellow-400">GAMES</span></span>
+        </div>
+
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="#home" data-i18n="nav.home" class="text-zinc-300 hover:text-yellow-400 transition-colors text-sm font-bold uppercase tracking-wider"></a>
+          <a href="#about" data-i18n="nav.about" class="text-zinc-300 hover:text-yellow-400 transition-colors text-sm font-bold uppercase tracking-wider"></a>
+          <a href="#games" data-i18n="nav.games" class="text-zinc-300 hover:text-yellow-400 transition-colors text-sm font-bold uppercase tracking-wider"></a>
+          <button class="lang-toggle flex items-center gap-2 text-zinc-400 hover:text-white transition-colors">
+            <i data-lucide="globe" class="w-4 h-4"></i>
+            <span class="lang-label text-xs font-bold">PT-BR</span>
+          </button>
+          <a href="#contact" data-i18n="nav.contact" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2.5 font-bold uppercase tracking-wider transition-all transform hover:scale-105 shadow-[4px_4px_0px_0px_rgba(253,224,33,1)]"></a>
+        </div>
+
+        <div class="md:hidden flex items-center gap-4">
+          <button class="lang-toggle text-zinc-400" aria-label="Idioma"><i data-lucide="globe" class="w-5 h-5"></i></button>
+          <button id="menu-btn" class="text-zinc-300 p-2" aria-label="Menu"><i data-lucide="menu" class="h-6 w-6"></i></button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobile-menu" class="hidden md:hidden bg-zinc-900 border-b border-zinc-800">
+      <div class="px-4 pt-2 pb-6 space-y-2">
+        <a href="#home" data-i18n="nav.home" class="mobile-link text-zinc-300 hover:text-yellow-400 block py-3 text-base font-bold uppercase"></a>
+        <a href="#about" data-i18n="nav.about" class="mobile-link text-zinc-300 hover:text-yellow-400 block py-3 text-base font-bold uppercase"></a>
+        <a href="#games" data-i18n="nav.games" class="mobile-link text-zinc-300 hover:text-yellow-400 block py-3 text-base font-bold uppercase"></a>
+        <a href="#contact" data-i18n="nav.contact" class="mobile-link text-red-500 font-bold block py-3 text-base uppercase"></a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="relative z-10">
+    <!-- Hero -->
+    <section id="home" class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 min-h-screen flex items-center overflow-hidden">
+      <div class="absolute inset-0 z-0 opacity-10">
+        <div class="absolute inset-0 bg-acre-flag"></div>
+        <div class="absolute inset-0 bg-zinc-950/80 backdrop-blur-[100px]"></div>
+      </div>
+
+      <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex flex-col items-center">
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 px-4 py-2 bg-green-900/30 border border-green-600/50 text-green-400 text-xs font-bold uppercase tracking-widest mb-8">
+            <i data-lucide="star" class="w-3 h-3 text-red-500 fill-red-500"></i>
+            <span data-i18n="hero.tag"></span>
+          </div>
+        </div>
+
+        <div class="reveal" style="transition-delay:150ms">
+          <h1 class="text-5xl md:text-7xl font-black text-white tracking-tight mb-6 uppercase">
+            <span data-i18n="hero.title1"></span> <br class="hidden md:block" />
+            <span data-i18n="hero.title2" class="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-green-500"></span>
+          </h1>
+        </div>
+
+        <div class="reveal" style="transition-delay:300ms">
+          <p data-i18n="hero.desc" class="mt-4 text-xl text-zinc-400 max-w-2xl mx-auto mb-12"></p>
+        </div>
+
+        <div class="reveal" style="transition-delay:450ms">
+          <div class="flex flex-col sm:flex-row gap-6 justify-center w-full sm:w-auto">
+            <a href="#games" class="inline-flex items-center justify-center px-8 py-4 text-sm font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 transition-all shadow-[6px_6px_0px_0px_rgba(253,224,33,1)] hover:shadow-[2px_2px_0px_0px_rgba(253,224,33,1)] hover:translate-x-[4px] hover:translate-y-[4px]">
+              <i data-lucide="gamepad-2" class="w-5 h-5 mr-3"></i>
+              <span data-i18n="hero.btnPrimary"></span>
+            </a>
+            <a href="#about" data-i18n="hero.btnSecondary" class="inline-flex items-center justify-center px-8 py-4 text-sm font-bold uppercase tracking-wider text-yellow-400 bg-transparent border-2 border-yellow-400 hover:bg-yellow-400 hover:text-zinc-950 transition-colors"></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="py-32 bg-zinc-900 relative border-y border-zinc-800">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:grid lg:grid-cols-2 lg:gap-20 items-center">
+
+          <div class="reveal mb-16 lg:mb-0 relative">
+            <div class="relative p-1.5 rounded-xl overflow-hidden group">
+              <div class="absolute inset-[-100%] conic-spin z-0"></div>
+              <div class="aspect-square bg-zinc-950 p-8 flex items-center justify-center relative overflow-hidden group-hover:bg-zinc-900 transition-colors duration-500 z-10 w-full h-full rounded-lg">
+                <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-yellow-400/5 to-green-600/5"></div>
+                <div class="relative z-10 transform group-hover:scale-110 transition-transform duration-700">
+                  <i data-lucide="feather" class="w-48 h-48 text-yellow-400 drop-shadow-[0_0_15px_rgba(253,224,33,0.3)]"></i>
+                  <i data-lucide="star" class="absolute -top-4 -right-4 w-12 h-12 text-red-600 fill-red-600 animate-pulse"></i>
+                </div>
+              </div>
+            </div>
+
+            <div class="absolute -bottom-8 -right-8 bg-zinc-950 border-l-4 border-yellow-400 p-6 shadow-2xl hidden md:block w-72 z-20">
+              <div class="flex items-center gap-4">
+                <div class="w-12 h-12 bg-green-900/50 flex items-center justify-center">
+                  <i data-lucide="leaf" class="w-6 h-6 text-green-400"></i>
+                </div>
+                <div>
+                  <p class="text-white font-bold text-sm uppercase">T. divisorius</p>
+                  <p class="text-zinc-500 text-xs">Choca-do-Acre</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-8">
+            <div class="reveal" style="transition-delay:100ms">
+              <h2 class="text-4xl font-black text-white uppercase tracking-tight">
+                <span data-i18n="about.title1"></span> <br />
+                <span data-i18n="about.title2" class="text-yellow-400"></span>
+              </h2>
+            </div>
+
+            <div class="reveal" style="transition-delay:200ms">
+              <div class="space-y-6 text-lg text-zinc-400">
+                <p data-i18n-html="about.p1"></p>
+                <p data-i18n-html="about.p2"></p>
+                <p data-i18n-html="about.p3"></p>
+              </div>
+            </div>
+
+            <div class="reveal" style="transition-delay:300ms">
+              <div class="mt-10 border-l-4 border-red-600 pl-6 bg-zinc-950/50 py-4 pr-4">
+                <p data-i18n="about.quote" class="text-xl italic font-serif text-yellow-200/80"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="reveal" style="transition-delay:400ms">
+          <div class="mt-32 pt-16 border-t border-zinc-800">
+            <div class="text-center mb-8">
+              <h3 data-i18n="about.daily" class="text-2xl font-black text-white uppercase tracking-wider"></h3>
+            </div>
+            <div class="relative w-full max-w-4xl mx-auto py-12 mt-10">
+              <button id="car-prev" aria-label="Anterior" class="absolute left-0 md:-left-16 top-1/2 -translate-y-1/2 z-30 p-3 bg-zinc-800 text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-zinc-950 transition-colors shadow-lg border border-zinc-700">
+                <i data-lucide="chevron-left" class="w-6 h-6"></i>
+              </button>
+              <div id="carousel" class="h-64 sm:h-80 relative flex items-center justify-center overflow-hidden w-full px-4"></div>
+              <button id="car-next" aria-label="Próximo" class="absolute right-0 md:-right-16 top-1/2 -translate-y-1/2 z-30 p-3 bg-zinc-800 text-yellow-400 rounded-full hover:bg-yellow-400 hover:text-zinc-950 transition-colors shadow-lg border border-zinc-700">
+                <i data-lucide="chevron-right" class="w-6 h-6"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Games -->
+    <section id="games" class="py-32 bg-zinc-950">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="reveal text-center max-w-3xl mx-auto mb-20">
+          <h2 data-i18n="games.title" class="text-4xl font-black text-white uppercase tracking-tight"></h2>
+          <p data-i18n="games.subtitle" class="mt-4 text-xl text-zinc-400"></p>
+        </div>
+        <div id="games-grid" class="grid grid-cols-1 md:grid-cols-3 gap-10"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="contact" class="relative z-10 bg-zinc-950 pt-20 pb-10 border-t border-zinc-800 overflow-hidden">
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-red-900/10 rounded-full blur-[100px] pointer-events-none"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-16 mb-16">
+        <div class="col-span-1 md:col-span-2">
+          <div class="flex items-center gap-3 mb-6">
+            <i data-lucide="star" class="w-8 h-8 text-red-600 fill-red-600"></i>
+            <span class="text-white font-black text-2xl tracking-widest uppercase">CHOCA <span class="text-yellow-400">GAMES</span></span>
+          </div>
+          <p data-i18n="footer.desc" class="text-zinc-400 max-w-sm"></p>
+        </div>
+
+        <div>
+          <h4 data-i18n="footer.quickLinks" class="text-white font-bold mb-6 uppercase tracking-widest text-sm border-b border-zinc-800 pb-2 inline-block"></h4>
+          <ul class="space-y-4">
+            <li><a href="#home" data-i18n="nav.home" class="text-zinc-400 hover:text-yellow-400 transition-colors uppercase text-xs font-bold"></a></li>
+            <li><a href="#about" data-i18n="nav.about" class="text-zinc-400 hover:text-yellow-400 transition-colors uppercase text-xs font-bold"></a></li>
+            <li><a href="#games" data-i18n="nav.games" class="text-zinc-400 hover:text-yellow-400 transition-colors uppercase text-xs font-bold"></a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 data-i18n="footer.connect" class="text-white font-bold mb-6 uppercase tracking-widest text-sm border-b border-zinc-800 pb-2 inline-block"></h4>
+          <div class="flex space-x-4 mb-6">
+            <a href="https://www.instagram.com/chocagamesstudio/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="w-12 h-12 bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-yellow-400 hover:text-zinc-950 hover:border-yellow-400 transition-all">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            </a>
+            <a href="https://github.com/chocagamesstudio" target="_blank" rel="noopener noreferrer" aria-label="GitHub" class="w-12 h-12 bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-green-600 hover:text-white hover:border-green-600 transition-all">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"></path><path d="M9 18c-4.51 2-5-2-7-2"></path></svg>
+            </a>
+            <a href="mailto:chocagamesstudio@gmail.com" aria-label="E-mail" class="w-12 h-12 bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-red-600 hover:text-white hover:border-red-600 transition-all">
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+            </a>
+          </div>
+          <a href="mailto:chocagamesstudio@gmail.com" class="text-zinc-400 hover:text-white font-medium text-sm break-all">chocagamesstudio@gmail.com</a>
+        </div>
+      </div>
+
+      <div class="border-t border-zinc-800 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-zinc-600 text-xs font-bold uppercase tracking-wider mb-4 md:mb-0">
+          &copy; <span id="year"></span> Choca Games Studio. <span data-i18n="footer.rights"></span>
+        </p>
+        <div class="flex h-2 w-32">
+          <div class="flex-1 bg-yellow-400"></div>
+          <div class="flex-1 bg-green-600"></div>
+          <div class="flex-1 bg-red-600"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const translations = {
+      pt: {
+        nav: { home: 'Início', about: 'Sobre Nós', games: 'Nossos Jogos', contact: 'Contato' },
+        hero: {
+          tag: 'Estúdio Indie do Acre, Brasil',
+          title1: 'Criando Jogos no',
+          title2: 'Coração da Floresta',
+          desc: 'Somos a Choca Games Studio. Um grupo de amigos que quer contar histórias que cativem através de jogos.',
+          btnPrimary: 'Explorar Jogos',
+          btnSecondary: 'Nossa História'
+        },
+        about: {
+          title1: 'Sobre',
+          title2: 'Nós',
+          p1: '<strong class="text-white">Choca Games Studio</strong> é um estúdio indie de jogos lá do Acre, bem no cantinho da região Norte do Brasil. Somos quatro estudantes de Sistemas de Informação da UFAC que descobriram que dá pra usar tudo que aprendemos (e muita coisa que não estava na ementa) pra fazer jogos.',
+          p2: 'O nome vem da <strong class="text-white">choca-do-acre</strong>, uma ave que só vive por aqui, no nosso quintal amazônico. Raridade, personalidade forte e orgulho de ser da terra: a gente se identificou na hora. Além disso, “choca” combina com a gente: chocamos ideias, chocamos protótipos e, de vez em quando, chocamos um bug que ninguém sabe de onde veio.',
+          p3: 'Não temos gênero favorito, e isso é de propósito. Queremos fazer jogos variados, desde que tenham uma história que prenda e uma jogabilidade que dê vontade de falar “só mais uma partida”. Se faltar um dos dois, volta pro ninho e a gente choca de novo.',
+          quote: '“Feito no Acre, jogado onde você estiver.”',
+          daily: 'Nosso Dia a Dia'
+        },
+        photos: ['Desenvolvimento 1', 'Testes Alpha', 'Reunião de Equipe', 'Design de Fase', 'Gravação de Áudio'],
+        games: {
+          title: 'Nossos Títulos',
+          subtitle: 'Dê uma olhada no que estamos preparando na nossa forja na floresta.',
+          wishlist: 'Adicionar à Lista de Desejos',
+          statusDev: 'Em Desenvolvimento',
+          statusAlpha: 'Alpha',
+          statusConcept: 'Conceito'
+        },
+        footer: {
+          desc: 'Um estúdio independente baseado no Acre, Brasil. Criando mundos imersivos inspirados pela Amazônia.',
+          quickLinks: 'Links Rápidos',
+          connect: 'Conecte-se',
+          rights: 'Todos os direitos reservados.'
+        }
+      },
+      en: {
+        nav: { home: 'Home', about: 'About Us', games: 'Our Games', contact: 'Contact' },
+        hero: {
+          tag: 'Indie Game Studio from Acre, Brazil',
+          title1: 'Crafting Games in the',
+          title2: 'Heart of the Forest',
+          desc: 'We are Choca Games Studio. A group of friends who want to tell captivating stories through games.',
+          btnPrimary: 'Explore Games',
+          btnSecondary: 'Our Story'
+        },
+        about: {
+          title1: 'The Spirit of the',
+          title2: 'Choca-do-Acre',
+          p1: '<strong class="text-white">Choca Games Studio</strong> is an indie game studio from Acre, tucked away in the northern corner of Brazil. We are four Information Systems students at UFAC who found out that everything we learned (and plenty that wasn\'t in the syllabus) can be used to make games.',
+          p2: 'The name comes from the <strong class="text-white">choca-do-acre</strong> (the Acre antshrike), a bird that lives only around here, in our Amazonian backyard. Rare, strong-willed and proud of its home: we saw ourselves in it right away. Besides, "choca" (Portuguese for "to hatch") suits us: we hatch ideas, we hatch prototypes and, once in a while, we hatch a bug nobody knows the origin of.',
+          p3: 'We have no favorite genre, and that\'s on purpose. We want to make varied games, as long as they have a story that hooks you and gameplay that makes you say "just one more round". If either is missing, it goes back to the nest and we hatch it again.',
+          quote: '"Made in Acre, played wherever you are."',
+          daily: 'Behind the Scenes'
+        },
+        photos: ['Development 1', 'Alpha Testing', 'Team Meeting', 'Level Design', 'Audio Recording'],
+        games: {
+          title: 'Our Upcoming Titles',
+          subtitle: 'Sneak a peek at what\'s currently brewing in our forest forge.',
+          wishlist: 'Add to Wishlist',
+          statusDev: 'In Development',
+          statusAlpha: 'Alpha',
+          statusConcept: 'Concept'
+        },
+        footer: {
+          desc: 'An independent game studio based in Acre, Brazil. Crafting immersive worlds inspired by the Amazon.',
+          quickLinks: 'Quick Links',
+          connect: 'Connect',
+          rights: 'All rights reserved.'
+        }
+      }
+    };
+
+    let lang = 'pt';
+    let currentIndex = 0;
+    const get = (obj, path) => path.split('.').reduce((o, k) => o && o[k], obj);
+
+    /* ---------- Games ---------- */
+    const games = [
+      { title: 'Project Y', genre: 'Adventure', status: 'statusDev', icon: 'layers', color: 'yellow' },
+      { title: 'Project G', genre: 'Strategy', status: 'statusAlpha', icon: 'leaf', color: 'green' },
+      { title: 'Project R', genre: 'Action RPG', status: 'statusConcept', icon: 'swords', color: 'red' }
+    ];
+    const palette = {
+      yellow: { text: 'text-yellow-400', border: 'hover:border-yellow-500', tag: 'text-yellow-400 border-yellow-400', bg: 'bg-yellow-400', icon: 'text-yellow-400' },
+      green:  { text: 'text-green-500',  border: 'hover:border-green-500',  tag: 'text-green-500 border-green-500',   bg: 'bg-green-500',  icon: 'text-green-500' },
+      red:    { text: 'text-red-500',    border: 'hover:border-red-500',    tag: 'text-red-500 border-red-500',       bg: 'bg-red-600',    icon: 'text-red-500' }
+    };
+
+    function renderGames() {
+      const t = translations[lang];
+      document.getElementById('games-grid').innerHTML = games.map((g, i) => {
+        const p = palette[g.color];
+        return `
+        <div class="reveal visible" style="transition-delay:${i * 150}ms">
+          <div class="group bg-zinc-900 border-2 border-zinc-800 ${p.border} transition-all duration-300 hover:-translate-y-2 flex flex-col h-full">
+            <div class="h-48 bg-zinc-950 border-b border-zinc-800 flex items-center justify-center relative overflow-hidden">
+              <div class="absolute inset-0 opacity-0 group-hover:opacity-10 transition-opacity duration-500 ${p.bg}"></div>
+              <div class="transform group-hover:scale-125 transition-transform duration-700 z-10">
+                <i data-lucide="${g.icon}" class="w-12 h-12 ${p.icon}"></i>
+              </div>
+              <div class="absolute top-4 right-4 bg-zinc-900 px-3 py-1 text-xs font-bold uppercase tracking-wider border ${p.tag}">${t.games[g.status]}</div>
+            </div>
+            <div class="p-8 flex-grow flex flex-col">
+              <div class="text-xs font-bold uppercase tracking-wider mb-2 ${p.text}">${g.genre}</div>
+              <h3 class="text-2xl font-black text-white mb-4 uppercase">${g.title}</h3>
+              <p class="text-zinc-400 flex-grow mb-8 text-sm leading-relaxed">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.
+              </p>
+              <button class="w-full py-4 px-4 bg-zinc-800 hover:bg-zinc-700 text-white font-bold uppercase tracking-wider transition-colors flex items-center justify-center group/btn text-sm">
+                ${t.games.wishlist}
+                <i data-lucide="arrow-right" class="w-4 h-4 ml-3 group-hover/btn:translate-x-2 transition-transform"></i>
+              </button>
+            </div>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    /* ---------- Carousel ---------- */
+    function renderCarousel() {
+      const labels = translations[lang].photos;
+      const n = labels.length;
+      const prevI = (currentIndex - 1 + n) % n;
+      const nextI = (currentIndex + 1) % n;
+      const el = document.getElementById('carousel');
+      el.innerHTML = labels.map((label, i) => {
+        let cls, z;
+        if (i === currentIndex) { z = 20; cls = 'scale-100 md:scale-110 translate-x-0 opacity-100 shadow-[0_0_30px_rgba(0,146,63,0.3)]'; }
+        else if (i === prevI)   { z = 10; cls = 'scale-75 -translate-x-[50%] md:-translate-x-[75%] opacity-40 blur-[1px]'; }
+        else if (i === nextI)   { z = 10; cls = 'scale-75 translate-x-[50%] md:translate-x-[75%] opacity-40 blur-[1px]'; }
+        else return '';
+        return `
+        <div data-i="${i}" class="car-item absolute w-full max-w-xs md:max-w-[400px] aspect-video bg-zinc-800 rounded-xl transition-all duration-700 ease-in-out ${cls} border border-zinc-700 flex flex-col items-center justify-center overflow-hidden cursor-pointer" style="z-index:${z}">
+          <i data-lucide="image" class="w-12 h-12 text-zinc-600 mb-3"></i>
+          <span class="text-zinc-500 font-bold uppercase tracking-wider text-sm">${label}</span>
+        </div>`;
+      }).join('');
+      lucide.createIcons();
+      el.querySelectorAll('.car-item').forEach(item => {
+        item.addEventListener('click', () => {
+          const i = Number(item.dataset.i);
+          if (i === prevI) prev();
+          if (i === nextI) next();
+        });
+      });
+    }
+    const next = () => { currentIndex = (currentIndex + 1) % translations[lang].photos.length; renderCarousel(); };
+    const prev = () => { currentIndex = (currentIndex - 1 + translations[lang].photos.length) % translations[lang].photos.length; renderCarousel(); };
+    document.getElementById('car-next').addEventListener('click', next);
+    document.getElementById('car-prev').addEventListener('click', prev);
+
+    /* ---------- i18n ---------- */
+    function applyLang() {
+      const t = translations[lang];
+      document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+      document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = get(t, el.dataset.i18n); });
+      document.querySelectorAll('[data-i18n-html]').forEach(el => { el.innerHTML = get(t, el.dataset.i18nHtml); });
+      document.querySelectorAll('.lang-label').forEach(el => { el.textContent = lang === 'pt' ? 'PT-BR' : 'EN'; });
+      renderGames();
+      renderCarousel();
+      lucide.createIcons();
+    }
+    document.querySelectorAll('.lang-toggle').forEach(b => b.addEventListener('click', () => {
+      lang = lang === 'pt' ? 'en' : 'pt';
+      applyLang();
+    }));
+
+    /* ---------- Mobile menu ---------- */
+    const menu = document.getElementById('mobile-menu');
+    const menuBtn = document.getElementById('menu-btn');
+    function setMenuIcon(open) {
+      menuBtn.innerHTML = `<i data-lucide="${open ? 'x' : 'menu'}" class="h-6 w-6"></i>`;
+      lucide.createIcons();
+    }
+    menuBtn.addEventListener('click', () => { setMenuIcon(menu.classList.toggle('hidden') === false); });
+    document.querySelectorAll('.mobile-link').forEach(a => a.addEventListener('click', () => { menu.classList.add('hidden'); setMenuIcon(false); }));
+
+    /* ---------- Particles ---------- */
+    (function () {
+      const colors = ['bg-yellow-400', 'bg-green-600', 'bg-red-600'];
+      const box = document.getElementById('particles');
+      for (let i = 0; i < 30; i++) {
+        const d = document.createElement('div');
+        const size = Math.random() * 6 + 2;
+        d.className = `absolute rounded-full opacity-20 animate-float ${colors[Math.floor(Math.random() * colors.length)]}`;
+        d.style.cssText = `width:${size}px;height:${size}px;left:${Math.random() * 100}%;bottom:-10px;animation-duration:${Math.random() * 10 + 10}s;animation-delay:-${Math.random() * 10}s`;
+        box.appendChild(d);
+      }
+    })();
+
+    /* ---------- Reveal on scroll ---------- */
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    /* ---------- Init ---------- */
+    document.getElementById('year').textContent = new Date().getFullYear();
+    applyLang();
+    document.querySelectorAll('.reveal:not(.visible)').forEach(el => observer.observe(el));
+
+    setTimeout(() => {
+      const l = document.getElementById('loading');
+      l.style.opacity = 0;
+      setTimeout(() => l.remove(), 500);
+    }, 2000);
+  </script>
+</body>
+</html>
